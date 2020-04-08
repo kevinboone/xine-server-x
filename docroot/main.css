@@ -1,0 +1,363 @@
+.albumlist
+  {
+  display: flex;
+  flex-flow: row wrap;
+  }
+
+.albumlistcell
+  {
+  float: right;
+  margin: 5px;
+  padding: 5px;
+  width: 256px;
+  border: 1px solid black;
+  align: center;
+  text-align: center;
+  }
+
+.albumlistimage
+  {
+  padding: 5px;
+  width: 128px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  }
+
+.albumlisttext
+  {
+  display: block;
+  width: 100%;
+  }
+
+.artistlist
+  {
+  display: flex;
+  flex-flow: row wrap;
+  }
+
+.artistlistcell
+  {
+  float: right;
+  margin: 5px;
+  padding: 5px;
+  width: 256px;
+  border: 1px solid black;
+  align: center;
+  text-align: center;
+  }
+
+.artistlisttext
+  {
+  font-weight: bolder;
+  }
+
+a:link
+  {
+  color: #4480b4;
+  text-decoration: none;
+  }
+
+a:visited
+  {
+  color: #4480b4;
+  text-decoration: none;
+  }
+
+a:active
+  {
+  color: #cb8a48;
+  text-decoration: none;
+  }
+
+a:hover
+  {
+  color: #cb8a48;
+  text-decoration: none;
+  }
+  
+body
+  {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  margin: 0;
+  }
+
+.composerlist
+  {
+  display: flex;
+  flex-flow: row wrap;
+  }
+
+.composerlistcell
+  {
+  float: right;
+  margin: 5px;
+  padding: 5px;
+  width: 256px;
+  border: 1px solid black;
+  align: center;
+  text-align: center;
+  }
+
+.composerlisttext
+  {
+  font-weight: bolder;
+  }
+
+#content
+  {
+  padding-left: 1em;
+  padding-right: 1em;
+  }
+
+.dirlist
+  {
+  display: flex;
+  flex-flow: row wrap;
+  }
+
+.dirlistcell
+  {
+  float: right;
+  margin: 5px;
+  padding: 5px;
+  width: 256px;
+  border: 1px solid black;
+  align: center;
+  text-align: center;
+  }
+
+.dirlistimage
+  {
+  padding: 5px;
+  width: 128px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  }
+
+.dirlisttext
+  {
+  display: block;
+  width: 100%;
+  }
+
+.filepageimage
+  {
+  width: 256px;
+  }
+
+.genrelist
+  {
+  display: flex;
+  flex-flow: row wrap;
+  }
+
+.genrelistcell
+  {
+  float: right;
+  margin: 5px;
+  padding: 5px;
+  width: 256px;
+  border: 1px solid black;
+  align: center;
+  text-align: center;
+  }
+
+.genrelisttext
+  {
+  font-weight: bolder;
+  }
+
+h1
+  {
+  font-family: sans-serif;
+  font-size: 1.5em;
+  }
+
+header 
+  {
+  background: #fff;
+  width: 100%;
+  height: 70px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-bottom: 4px solid #4C9CF1;
+  z-index: 100;
+  }
+
+.listnav
+  {
+  padding: 10px;
+  }
+
+.main_menu 
+  {
+  list-style: none;
+  }
+
+.main_menu_item 
+  {
+  display: inline-block;
+  float: left;
+  padding: 10px;
+  }
+
+#messagebox
+  {
+  padding-top: 5px;
+  }
+
+#menu-icon 
+  {
+  display: hidden;
+  width: 40px;
+  height: 40px;
+  background: #4C8FEC url(/int/menu_icon.png) center;
+  }
+
+a:hover#menu-icon 
+  {
+  background-color: #444;
+  border-radius: 4px 4px 0 0;
+  }
+
+
+#messagecell
+  {
+  color: blue;
+  }
+
+nav 
+  {
+  float: right;
+  }
+
+#poslen
+  {
+  float: left;
+  margin-right: 2em;
+  }
+
+.resultpagecurrent
+  {
+  padding:3px;
+  margin: 3px;
+  line-height: 2em;
+  border: 1px solid #4c9cF1;
+  }
+
+.resultpagenoncurrent
+  {
+  padding: 3px;
+  margin: 3px;
+  line-height: 2em;
+  border: 1px solid #4c9cF1;
+  }
+
+section 
+  {
+  margin: 72px auto 40px;
+  position: relative;
+  padding: 0;
+  }
+
+#streamposspan
+  {
+  font-size: 2em;
+  }
+
+.tracklistcell
+  {
+  margin-bottom: 1em;
+  }
+
+#trackinfo
+  {
+  float: left 
+  }
+
+.tracklistsupinfo
+  {
+  font-size: smaller; 
+  }
+
+.tracklistname
+  {
+  font-weight: bolder; 
+  }
+
+#transportbuttons
+  {
+  float: left;
+  margin-right: 2em;
+  }
+
+#transportbox
+  {
+  background: #F0F0F0;
+  margin: 0;
+  padding: 10px;
+  border-bottom: 1px solid #4C9CF1;
+  }
+
+#volumeslider
+  {
+  background: #d3d3d3; 
+  width: 100px;
+  height: 24px;
+  opacity: 0.5; 
+  }
+
+#volumeslider:hover 
+  {
+  opacity: 1; 
+  }
+
+/*MEDIA QUERY*/
+@media only screen and (max-width : 800px) 
+  {
+  .indexcolumn
+    {
+    width: 100%;
+    }
+
+   header 
+     {
+     position: absolute;
+     }
+
+  #menu-icon 
+    {
+    display: inline-block;
+    }
+
+  nav ul, nav:active ul 
+    { 
+    display: none;
+    position: absolute;
+    padding: 20px;
+    background: #fff;
+    border: 5px solid #444;
+    right: 10px;
+    top: 10px;
+    width: 30%;
+    border-radius: 4px 0 4px 4px;
+    }
+
+  nav li 
+    {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+    margin: 0;
+    }
+
+  nav:hover ul 
+    {
+    display: block;
+    }
+  }
+
+

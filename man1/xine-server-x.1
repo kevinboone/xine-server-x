@@ -1,0 +1,238 @@
+.\" Copyright (C) 2020 Kevin Boone 
+.\" Permission is granted to any individual or institution to use, copy, or
+.\" redistribute this software so long as all of the original files are
+.\" included, that it is not sold for profit, and that this copyright notice
+.\" is retained.
+.\"
+.TH xine-server-x 1 "Jan 2020"
+.SH NAME
+xine-server-x -- a web-based front-end for xine-server, with local file indexing and Internet radio support
+.SH SYNOPSIS
+.B xine-server-x\ [options]
+.PP
+
+.SH DESCRIPTION
+
+\fIxine-server-x\fR, also known as \fIXSX\fR, is an HTTP-enabled front 
+end to the
+\fIxine-server\fR distributed audio player. 
+
+Together these components make up a browser-controllable audio player,
+for both local files and Internet radio streams. 
+
+\fIXSX\fR communicates with \fIxine-server\fR using a custom client-server
+protocol on (by default) port 30001. In principle, \fIXSX\fR and
+\fIxine-server\fR could be on separate hosts, but this is only
+practicable if the audio files to be played are on some shared
+filesystem. Even then, this isn't really the way these two components
+are designed to be used.
+
+\fIXSX\fR is one of a number of clients of xine-server -- another is the
+GTK-based Internet radio stream player \fIgxsradio\fR.
+
+XSX requires a source of audio -- either local files, or radio streams,
+or both. All widely-used (at the time of writing) audio file formats
+are supported. Radio streams are specified in files with the same
+format as that used by \fIgxsradio(1)\fR.
+
+.SH "RC (CONFIGURATION) FILE"
+
+The configuration is read from \fI/etc/xine-server-x.rc\fR, and
+\fI$HOME/.xine-server-x.rc\fR, with the latter taking priority. The settings
+that can be made in the configuration file are identical to the long names
+of the command-line options (see below).
+
+
+.SH "OPTIONS"
+
+The long forms of all command-line options can also be used in an 
+RC (configuration) file.
+
+.TP
+.BI -d,\-\-debug
+.LP
+Do not detach from controlling terminal; logging is to standard out.
+
+.TP
+.BI -g,\-\-gxsradio={directory}
+.LP
+The directory where radio station list files are stored. These are in
+\fIgxsradio(1)\fR format. The default is \fI/usr/share/gxsradio\fR.
+
+.TP
+.BI -i,\-\-index={filename}
+.LP
+The name of the file used to store the index (database) of audio
+files. In nearly all usage scenarios this option needs to be specified,
+and the program will emit a warning on start-up if it is not.
+The file need not initially exist -- it is created when scanning
+audio files.
+
+This file needs to be in a writeable location -- usually only an
+issue on embedded systems. It can be in the audio root directory,
+but there is no requirement for it to be.
+
+The index is in sqlite3 format, and can be read (and potentially
+modified) by other tools if required.
+
+.TP
+.BI -l,\-\-log\-level={0..4}
+.LP
+Sets the system log level. In normal (background, daemon) operation,
+only log levels 0-2 are captured. In debug (foreground) mode, all log
+levels 0-4 can be used. However, high log levels will probably be
+meaningful only if examined alongside the program's source code.
+
+.TP
+.BI -p,\-\-port={number}
+.LP
+The main port number for \fIxine-server-x\fR, that is used by web browsers and
+REST API clients. The default is 30000.
+
+.TP
+.BI -q,\-\-quickscan
+.LP
+Perform a quick scan of files in the audio root directory, and update the
+index. Only files that have been added since the last scan, or changed since
+they were added to the index, are scanned. This operation can be invoked
+from the command line, or using the web interface. Once scanning has finished,
+the program exists. In this mode, other command-line options except
+\fI--index\fR and \fI--root\fR are ignored.
+
+.TP
+.BI -r,\-\-root={directory}
+.LP
+The root directory for local audio files. If audio files are in many
+disparate directories, it is fine to create a new directory and populate
+it with symbolic links to the real file locations. The scanning process
+will descend subdirectories to arbitrary depth.
+
+.TP
+.BI -s,\-\-scan
+.LP
+Perform a full scan of files in the audio root directory, and build the index.
+This operation can be invoked from the command line, or using the web
+interface. Once scanning has finished, the program exists.  In this mode, other
+command-line options except \fI--index\fR and \fI--root\fR are ignored.
+
+The full scan works on a temporary index file, which has the same
+path as the main index with \fI.temp\fR added. When the scan is complete,
+the temporary file overwrites the main index, if it exists. This process
+allows the original index, if present, to be used while a full scan
+is in progress -- in large audio collections a full scan can take 
+many minutes.
+
+The scan also extracts cover art images --if present -- from audio files, 
+if there are none already in the same directory.
+
+.TP
+.BI \-\-xsport={number}
+.LP
+The port number that \fIxine-server\fR is listening on. The default is
+30001
+
+.TP
+.BI \-\-xshost={hostname}
+.LP
+The hostname of the \fIxine-server\fR server. The default is localhost.
+
+.TP
+.BI \-\-xslaunch
+.LP
+Command used to launch \fIxine-server\fR on the local host. If this option
+is not given, there is assumed to be a running an accessible instance of
+\fIxine-server\fR already. 
+
+If \fIxine-server_x\fR starts \fIxine-server\fR, then it will attempt to
+shut it down cleanly on exit, even if exit is on a signal.
+
+
+.SH NOTES
+
+.SS Signals 
+
+\fIxine-server-x\fR traps the usual shut-down signals (SIGINT, etc) and
+tries to shut down cleanly. Depending on what the server is doing at
+the time, it might take a second or two to shut down -- perhaps longer
+if it is in the process of making a network connection to an Internet
+radio stream. If \fIXSX\fR started \fIxine-server\fR, it will try to stop it
+if XSX shuts down on a signal.
+
+.SS User privileges
+
+\fIxine-server-x\fR is designed to run as an unprivileged user. It needs no
+special permissions, because all the actual audio playback is handled by
+\fIxine-server\fR. 
+To perform file scanning (for maintaining the index),
+the index file needs to be writeable. To extract cover art images
+from audio files, the audio file directories need to be writable.
+XSX can be operated with a completely read-only filesystem -- as
+might be required in an embedded system -- but some other provision
+will have to be made to create the index.
+
+.SS Launching xine-server from XSX
+
+For convenience, \fIxine-server-x\fR can launch \fIxine-server\fR on startup,
+and close it on shutdown. This action is not the default, because
+\fIxine-server\fR can operate independently of XSX, having other
+(local or remote) clients. 
+
+.SS Browser compatibility
+
+XSX requires a fairly modern web browser. It uses media queries to
+size the display to fit screens of different sizes, and 'flex' layout
+to create tables with dynamic column numbers. 
+
+.SS Track play order
+
+When playing tracks by album, the track tag (if there is one) is
+used to sort the play order. Most (all?) media tagging schemes have
+no notion of a numeric track tag -- it's usually just a text string.
+This means that it's common to see tracks tagged as "1/20" or
+"003 of 10", etc. XSX uses the integer cast feature in sqlite3 to
+order the tracks by the database's notion of a number. This is
+generally effective, but it certainly won't help if tracks are
+tagged "track01" or "one". There isn't much that XSX can do about
+freakish tagging schemes.
+
+XSX can play all the files in a specified directory, rather than
+all the tracks in an album. In this mode of operation.
+XSX does not make use of the index (database) -- in fact, until an index
+has been constructed this is the only method that XSX provides for
+viewing and playing local audio.
+
+When playing files in a directory, because no metainfo is used,
+files are played in alphanumeric order of filename. This is probably
+not the order in which the album producer expected tracks to be
+played.
+
+.SS Cover art display 
+
+The XSX web interface will attempt to display cover art images alongside
+albums, if it can find any. For a specific album, the cover art image
+is a file with a well-defined name (`folder.png`, `cover.jpg`, etc) in
+the same folder as the first track in the album. These
+files can be added explicitly, if the file scanner cannot extract them
+from the audio files. XSX has no support for downloading
+cover art files from Internet sources.
+
+.SS Cover art extraction
+
+Extracting cover art from audio files is time-consuming, so XSX does it
+as a one-time operation as part of the audio scanning process.
+During scanning, the first file in a directory that has an embedded
+cover image is used as the cover source. The image is extracted and
+stored in the same directory, with the name `cover` and extension
+appropriate to the type of image stored in the audio file.
+
+The cover art extraction process will not overwrite a cover image
+if it already exists, whether it was extracted by the scanner or
+added explicitly by the user.
+
+
+.SH SEE ALSO 
+
+\fIxine-server(1)\fR
+
+
+.\" end of file

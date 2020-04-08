@@ -1,0 +1,47 @@
+<div id="transportbuttons">
+<a href="javascript:cmd_prev()"><img class="transportbuttonimage" src="/int/prevbutton.png" alt="prev button"/></a>
+<a href="javascript:cmd_stop()"><img class="transportbuttonimage" src="/int/stopbutton.png" alt="stop button"/></a>
+<a href="javascript:cmd_play()"><img class="transportbuttonimage" src="/int/playbutton.png" alt="play button"/></a>
+<a href="javascript:cmd_pause()"><img class="transportbuttonimage" src="/int/pausebutton.png" alt="pause button"/></a>
+<a href="javascript:cmd_next()"><img class="transportbuttonimage" src="/int/nextbutton.png" alt="prev button"/></a>
+<br/>
+<span id="transportstatusspan">stopped</span> 
+<input type="range" min="1" max="100" value="50" id="volumeslider"/>
+<img src="/int/spk.png"/>
+</div>
+
+<div id="poslen">
+<table>
+  <tr>
+    <td>
+      <span id="streamposspan">00:00</span> 
+      <span id="streamlenspan">00:00</span> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+    </td>
+  </tr>
+</table>
+</div>
+
+<table id="trackinfo">
+  <tr>
+    <td>
+       <span id="titlespan">-</span> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <span id="albumspan">-</span> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+      (<span id="playlistindexspan">-</span> of  
+        <span id="playlistlengthspan">-</span>)
+    </td>
+  </tr>
+</table>
+
+<br clear="all"/>

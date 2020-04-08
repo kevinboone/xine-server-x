@@ -1,0 +1,28 @@
+@@generic_top.html@@
+
+<h1>Search results for '%%search%%'</h1>
+
+<form action="/gui/searchres" method="GET">
+<input size="30" type="text" name="search" id="search" autofocus />
+<script>
+    if (!("autofocus" in document.createElement("input"))) {
+      document.getElementById("search").focus();
+    }
+</script>
+<input type="submit" name="submit" value="Search"/>
+</form>
+
+<h2>Album matches</h2>
+
+%%album_morelink%%
+%%album_matches%%
+
+<h2>Track matches</h2>
+
+<p>
+%%track_morelink%%
+<p/>
+%%track_matches%%
+
+@@generic_bottom.html@@
+

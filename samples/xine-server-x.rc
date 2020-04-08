@@ -1,0 +1,3 @@
+root=/home/kevin/mediafiles/audio_music
+index=/home/kevin/mediafiles/audio_music/xsx.sqlite
+xslaunch=xine-server

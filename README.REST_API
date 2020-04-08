@@ -1,0 +1,231 @@
+# XSX REST API
+
+## General format
+
+Requests are made on the same port as the web interface (default 30000).
+All requests start
+
+    /api/..
+
+Responses are in JSON format, in UTF8 encoding. The server does not distinguish
+between GET and POST requests. All requests that could be parsed return 
+HTTP error code 200, whether they were successful or not. Request that could
+not be parsed return HTTP code 400.
+
+The general response is
+
+  { "status": 0, "message": "OK" }
+
+The status is one of the codes defined in xine-server-x-api.h. Zero 
+indicates success. The `message` field will always carry a textual error
+message in error conditions, and will contain `OK` for requests that 
+return no data if they are successful. Requests that return data do not
+also have a `message` element.
+
+All file and directory names are relative to the media root, that is,
+the directory specified to XSX using the `--root` option. They may,
+or may not, start with a leading /. Arguments should be escaped using 
+the ordinary HTTP escaping rules.
+
+## List of functions
+
+`add_dir?dir=`
+
+Add the specified files to the end of the playlist. The directory path is
+relative to the media root, but should start with a separator. 
+
+`add_file?file=`
+
+Add the specified file to the end of the playlist. The file path is
+relative to the media root, but should start with a separator. Clients
+are advised against adding many individual files using `add_file`, because
+there may conceivably be clients of `xine-server` expecting change
+notifications. To add many files, using `add_matching` or `add_dir`
+instead.
+
+`add_matching?constraint=value...`
+
+Adds to the playlist all tracks that match the specified search
+constraints. See the Search constraints section for more information.
+This function does not clear the playlist, nor change the playback
+position.
+
+`clear`
+
+Clears the playlist and stops playback. In effect, brings XSX
+and `xine-server` back to start-up state.
+
+`list_albums`
+
+Lists the album names in the database. The output format is
+
+    {"status": 0, "list":["album1","album2",...]}
+
+
+`list_dirs?dir=d`
+
+List directories under `dir`. If `dir` is not specified, list directories 
+in the media root. If the directory can be listed, the response is of
+this form:
+
+    {"status": 0, "list":["foo1","foo2",...]}
+
+The dir argument is relative to the media root; it doesn't make any
+difference whether it starts or ends with /, or not.
+
+`list_station_lists`
+
+List radio station lists. 
+The response is of this form:
+
+    {"status": 0, "list":["foo1","foo2",...]}
+
+Radio station lists are in `.gxsradio` files, but the exension is not returned:
+the implementation is opaque to the client.
+
+`list_station_names?list=l`
+
+List radio stations in list `l`. `l` is one of the values returned by
+`list_station_lists`. 
+The response is of this form:
+
+    {"status": 0, "list":["foo1","foo2",...]}
+
+
+`next`
+
+Start playing the next item in the playlist, if there is one
+
+`pause`
+
+Pause playback
+
+`play`
+
+If paused, resume. If stopped, play from the start of playlist, if there is
+a playlist. Otherwise, raise an error message as there is nothing to
+play.
+
+`play-matching?constraint=value...`
+
+Clears the playlist, then adds to the playlist all tracks that match the
+specified search constraints (see the Search constraints section for more
+information).  Then start playback from the first item, if there were any
+matches.
+
+`play_station?list=l&name=n`
+
+Play radio station stream with name n from station list l. Any previous
+playlist is overwritten. `l` is one of the station list names from
+`list_station_lists` and `n` one of the names from `list_station_names`.
+
+`prev`
+
+Starting playing the previous item in the playlist, if there is one
+
+`stop`
+
+Stop playback, and set the current play position to before the 
+start of the first playlist item
+
+`play_album?album=...`
+
+Plays all the tracks in the specified album, clearing any existing
+playlist
+
+`play_dir?dir=...`
+
+Plays all the the files in the specified directory, replacing any
+existing playlist. The diretory path is relative to the
+server's media root, but should begin with a separator
+
+`play_file?file=...`
+
+Plays the specified file immediately. The file path is relative to the
+server's media root, but should begin with a separator
+
+`play_index?index=...`
+
+Play from the specified index (zero-based) in the playlist
+
+`quick_scan`
+
+Starts a quick scan -- newly-added or modified files are added to
+the index
+
+`full_scan`
+
+Starts a full scan -- all files are scanned and a new index
+built
+
+`scanner_status`
+
+Returns the status of the file scanner in JSON format. The response
+is of this form:
+
+    { "status": 0, "running": 0, "scanned": 0, "added": 
+      0, "modified": 0, "deleted": 0, "extracted": 0 }
+
+If `running` is zero the scanner is not running, and the remaining
+fields should be ignored. If `running` is non-zero, then the 
+following fields represent respectively the number of playable files
+scanner, the number of files added to the index, the number of
+index entries changed, the number of index entries deleted, and the
+number of cover images extracted. Note that the `deleted` figure is
+unlikely ever to show as non-zero, since the delete operation affects
+only the index, and is very fast.
+
+`shutdown`
+
+Shuts down the XSX server. If XSX was configured to start `xine-server`,
+the `xine-server` is shut down as well.
+
+`status`
+
+Returns status and meta-info for the currently-playing item, if any, as
+a JSON object. The information fields in the response are the same, whether
+anything is playing or not. If not playing, bitrate is reported as zero,
+playlist index as -1, and all text fields as a dash (`-`).
+
+## Search constraints
+
+Some functions take search constraints as request arguments. Each argument
+applies a constraint to some field in the track database. The exception
+is the argument `disjunct` which controls whether multiple constraints
+are to be applied as logical 'and' (`disjunct=0`, the default) or
+logical 'or' (`disjunct=1`).
+
+Each constraint takes this form:
+
+  {field}-{test}={value}
+
+`field` is one of `artist`, `album`, `composer`, `genre`, `title`,
+or `daysago`.  `test` is `is`, `contains`, or `lessthan`. `value` is the 
+test value.
+
+So, for example, to select all tracks where the composer is Bach:
+
+    composer-is=Bach
+
+This test is exact and case-sensitive. On the other hand,
+
+    composer-contains=bach
+
+would match "bach", "Bach", "JS Bach", "Bach, JS", etc.
+
+The `lessthan` test only applies to `daysago`, how recently the file
+was added or modified. The test value is a number of days.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

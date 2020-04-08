@@ -1,0 +1,35 @@
+@@scanner_top.html@@
+
+<h1>File scanner control</h1>
+
+<div id="scannerprogressbox">
+<span id="scannerprogresscell"></span>
+</div>
+
+<p>
+The current index file is <code>%%index_file%%</code>.
+</p>
+<p>
+The current audio file root is <code>%%root%%</code>.
+</p>
+
+<p>
+<a href="javascript:cmd_quick_scan()">Start quick scan</a>. Files 
+that have been added or modified since the last scan will be scanned
+and added to the index. Files that are in the index, and have been
+removed from the filesystem, will be removed from the index. This
+operation will not even begin if there is not already an index
+in place.
+</p>
+
+<p>
+<a href="javascript:cmd_full_scan()">Start full scan</a>. The existing
+index will be replaced by a new one; all playable files will be
+scanned. This can be quite time-consuming. The existing index will
+remain available under the new one is complete.
+</p>
+
+
+
+@@generic_bottom.html@@
+

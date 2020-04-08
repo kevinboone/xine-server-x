@@ -1,0 +1,18 @@
+@@generic_top.html@@
+
+<h1>Search</h1>
+
+Search in album, genre, artist, composer, or title.
+
+<form action="/gui/searchres" method="GET">
+<input size="30" type="text" name="search" id="search" autofocus />
+<script>
+    if (!("autofocus" in document.createElement("input"))) {
+      document.getElementById("search").focus();
+    }
+</script>
+<input type="submit" name="submit" value="Search"/>
+</form>
+
+@@generic_bottom.html@@
+
