@@ -28,7 +28,7 @@ are designed to be used.
 XSX is one of a number of clients of `xine-server` -- another is the
 GTK-based Internet radio stream player `gxsradio`:
 
-https://github.com/kevinboone/xine-server
+https://github.com/kevinboone/gxsradio
 
 ## Preparation 
 
@@ -442,5 +442,14 @@ with the terms of the GNU Public Licence, v3.0. Essentially this
 means that you may use this software in any way you see fit, so long
 as source code continues to be made available, and the original
 author is acknowledged. There is no warranty of any kind.
+
+## Revision history
+
+*Version 0.1, April 2020*<br/>
+First functional release
+
+
+
+
 
 
